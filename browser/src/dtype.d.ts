@@ -5,8 +5,9 @@ export interface Config {
     'defaultAuthErrorResolution': AuthErrorResolution;
     'authErrorEvent'?: string;
     'authCheckEndpoint'?: string;
-    'loginEndpoing'?: string;
+    'loginEndpoint'?: string;
     'logoutEndpoint'?: string;
+    'checkAutoRedirect'?: boolean;
 }
 
 declare global {

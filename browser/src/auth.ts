@@ -1,8 +1,41 @@
+import request, {
+    AuthError
+} from './request.js';
+import config from './config.js';
+
 export const login = () => {
     sessionStorage.setItem( 'redirect', location.pathname );
-    location.href = '/login';
+    location.href = config.get().loginEndpoint ?? '/auth/v2/login';
 };
 
-export const check = () => {};
+export const check = async () => {
+    let status: boolean;
 
-export const logout = () => {};
+    try {
+        status = ( await request.get( config.get().authCheckEndpoint ?? '/auth/v2/check' ) ).ok;
+    } catch ( e ) {
+        if ( e instanceof AuthError ) {
+            status = false;
+        } else {
+            throw e;
+        }
+    }
+
+    if ( !status && config.get().checkAutoRedirect ) {
+        location.href = getRedirect();
+    }
+
+    return status;
+};
+
+export const getRedirect = (): string | null => {
+    const item = sessionStorage.getItem( 'redirect' );
+
+    sessionStorage.removeItem( 'redirect' );
+
+    return item;
+};
+
+export const logout = async () => {
+    location.href = config.get().logoutEndpoint ?? '/auth/v2/logout';
+};
