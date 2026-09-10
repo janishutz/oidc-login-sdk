@@ -1,0 +1,20 @@
+{
+  "name": "@janishutz/oidc-login-browser",
+  "version": "1.0.0",
+  "description": "SDK to communicate with and log into a backend running express-openid-connect",
+  "homepage": "https://github.com/janishutz/oidc-login-sdk-browser#readme",
+  "bugs": {
+    "url": "https://github.com/janishutz/oidc-login-sdk-browser/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janishutz/oidc-login-sdk-browser.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Janis Hutz",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
