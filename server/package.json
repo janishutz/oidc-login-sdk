@@ -1,7 +1,7 @@
 {
-  "name": "@janishutz/oidc-login-browser",
+  "name": "@janishutz/oidc-login-server",
   "version": "1.0.0",
-  "description": "SDK to communicate with and log into a backend running express-openid-connect",
+  "description": "Small wrapper on top of express-openid-connect to work together with my browser sdk",
   "homepage": "https://github.com/janishutz/oidc-login-sdk-browser#readme",
   "bugs": {
     "url": "https://github.com/janishutz/oidc-login-sdk-browser/issues"
@@ -16,5 +16,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-vue": "^10.11.0",
+    "globals": "^17.12.0",
+    "typescript-eslint": "^8.70.0"
   }
 }
