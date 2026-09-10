@@ -10,6 +10,7 @@ import express from 'express';
  * @param authForAllRoutes - Whether or not to require authorization on all routes
  * @param scopes - Scopes to request
  * @param enableBackchannelLogout - Whether or not to enable backchannel logout. If true, must provide sessionStore
+ * @param loginReturnURL - The URL to return to by default if none is specified as returnTo query parameter
  * @param userValidation - Function to validate the user
  * @param sessionStore - RECOMMENDED: Use any express-session SessionStore, like the RedisStore
  * @param extraOpts - Extra configuration options, or overwrite some set here
@@ -21,7 +22,8 @@ export const configure = (
     authForAllRoutes: boolean,
     scopes: ( 'profile' | 'email' )[],
     enableBackchannelLogout: boolean,
-    userValidation: ( req: express.Request, res: express.Response, session: connect.Session ) => Promise<connect.Session>,
+    loginReturnURL?: URL,
+    userValidation?: ( req: express.Request, res: express.Response, session: connect.Session ) => Promise<connect.Session>,
     sessionStore?: connect.SessionStore,
     extraOpts?: connect.ConfigParams
 ) => {
@@ -44,7 +46,7 @@ export const configure = (
         'enableTelemetry': false,
         'routes': {
             'callback': '/auth/v2/verify',
-            'login': '/auth/v2/login',
+            'login': false,
             'logout': '/auth/v2/logout',
             'postLogoutRedirect': '/',
             'backchannelLogout': '/auth/v2/logout'
@@ -53,6 +55,15 @@ export const configure = (
     } ) );
 
     app.get( '/auth/v2/check', connect.requiresAuth(), ( _req, res ) => res.sendStatus( 200 ) );
+
+    app.get( '/auth/v2/login', ( req, res ) => {
+        res.oidc.login( {
+            'returnTo': req.query.returnTo ? String( req.query.returnTo ) : ( loginReturnURL.href ?? '/' ),
+            'authorizationParams': {
+                'redirect_uri': appURL.href + 'auth/v2/verify'
+            }
+        } );
+    } );
 };
 
 /** Re-Export of express-openid-connect's requiresAuth function */
