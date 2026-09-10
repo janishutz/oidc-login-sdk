@@ -1,6 +1,6 @@
 {
   "name": "@janishutz/oidc-login-sdk-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Small wrapper on top of express-openid-connect to work together with my browser sdk",
   "homepage": "https://github.com/janishutz/oidc-login-sdk-browser#readme",
   "bugs": {
