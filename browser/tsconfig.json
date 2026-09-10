@@ -6,9 +6,6 @@
         "target": "ES2022",
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
-        "types": [
-            "node"
-        ],
         "module": "NodeNext",
         "moduleResolution": "NodeNext"
     },

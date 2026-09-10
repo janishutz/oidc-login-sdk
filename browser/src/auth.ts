@@ -22,7 +22,10 @@ export const check = async () => {
     }
 
     if ( !status && config.get().checkAutoRedirect ) {
-        location.href = getRedirect();
+        const redir = getRedirect();
+
+        if ( redir )
+            location.href = redir;
     }
 
     return status;

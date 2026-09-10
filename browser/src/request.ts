@@ -44,6 +44,8 @@ const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: Au
         } else {
             throw new AuthError( 'ERR_USER_UNAUTHORIZED' );
         }
+
+        return res;
     } else {
         return res;
     }
