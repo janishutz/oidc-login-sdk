@@ -58,7 +58,7 @@ export const configure = (
 
     app.get( '/auth/v2/login', ( req, res ) => {
         res.oidc.login( {
-            'returnTo': req.query.returnTo ? String( req.query.returnTo ) : ( loginReturnURL.href ?? '/' ),
+            'returnTo': req.query.returnTo ? String( req.query.returnTo ) : ( loginReturnURL?.href ?? '/' ),
             'authorizationParams': {
                 'redirect_uri': appURL.href + 'auth/v2/verify'
             }
