@@ -3,9 +3,9 @@ import request, {
 } from './request.js';
 import config from './config.js';
 
-export const login = () => {
+export const login = ( returnTo?: string ) => {
     sessionStorage.setItem( 'redirect', location.pathname );
-    location.href = config.get().loginEndpoint ?? '/auth/v2/login';
+    location.href = ( config.get().loginEndpoint ?? '/auth/v2/login' ) + returnTo ? returnTo : '';
 };
 
 export const check = async () => {
