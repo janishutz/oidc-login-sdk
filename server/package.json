@@ -2,13 +2,13 @@
   "name": "@janishutz/oidc-login-sdk-server",
   "version": "1.1.0",
   "description": "Small wrapper on top of express-openid-connect to work together with my browser sdk",
-  "homepage": "https://github.com/janishutz/oidc-login-sdk-browser#readme",
+  "homepage": "https://github.com/janishutz/oidc-login-sdk#readme",
   "bugs": {
-    "url": "https://github.com/janishutz/oidc-login-sdk-browser/issues"
+    "url": "https://github.com/janishutz/oidc-login-sdk/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/janishutz/oidc-login-sdk-browser.git"
+    "url": "git+https://github.com/janishutz/oidc-login-sdk.git"
   },
   "license": "GPL-3.0-or-later",
   "author": "Janis Hutz",

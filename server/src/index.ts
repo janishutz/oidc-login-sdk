@@ -66,5 +66,5 @@ export const configure = (
     } );
 };
 
-/** Re-Export of express-openid-connect's requiresAuth function */
+/** Re-Export of express-openid-connect's requiresAuth function, this should be used instead of directly if you also want to use the stubs */
 export const requiresAuth = connect.requiresAuth;
