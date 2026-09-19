@@ -1,4 +1,4 @@
-package main
+package oidclogin
 
 import (
 	"context"
@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
 )
@@ -21,68 +20,28 @@ func createRandomString(n int) (string, error) {
 	return base64.URLEncoding.EncodeToString(s), nil
 }
 
-var config oauth2.Config
-var userFunc func(userid string)
+var (
+	config   oauth2.Config
+	userFunc func(userid string, name string, email string)
+	verifier oidc.IDTokenVerifier
+)
 
-func Configure(app_url string, scopes []string) {
+func Configure(r *gin.Engine, app_url string, scopes []string) {
+	r.GET("/auth/v2/login", LoginHandler)
+	r.GET("/auth/v2/verify", CallbackHandler)
+
 	provider, err := oidc.NewProvider(context.Background(), os.Getenv("OIDC_ISSUER"))
+	clientID := os.Getenv("OIDC_CLIENT_ID")
+	verifier = *provider.Verifier(&oidc.Config{ClientID: clientID})
 	if err != nil {
 		log.Fatal("Provider resolution failed with error", err)
 	}
+
 	config = oauth2.Config{
-		ClientID:     os.Getenv("OIDC_CLIENT_ID"),
+		ClientID:     clientID,
 		ClientSecret: os.Getenv("OIDC_CLIENT_SECRET"),
 		Endpoint:     provider.Endpoint(),
 		RedirectURL:  app_url + "/auth/v2/verify",
-		Scopes:       append([]string{"oidc"}, scopes[:]...),
+		Scopes:       []string{oidc.ScopeOpenID, "email", "profile"},
 	}
-}
-
-func LoginHandler(c *gin.Context) {
-	state := rand.Text()
-	nonce := rand.Text()
-	codeVerifier := oauth2.GenerateVerifier()
-	session := sessions.Default(c)
-	session.Set("jhid_oauth_state", state)
-	session.Set("jhid_oauth_nonce", nonce)
-	session.Set("jhid_oauth_code_verifier", codeVerifier)
-	session.Save()
-	c.Redirect(301, config.AuthCodeURL(state, oidc.Nonce(nonce), oauth2.S256ChallengeOption(codeVerifier)))
-}
-
-func CallbackHandler(c *gin.Context) {
-	session := sessions.Default(c)
-	state := session.Get("jhid_oauth_state")
-	nonce := session.Get("jhid_oauth_nonce")
-	codeVerifier := session.Get("jhid_oauth_code_verifier").(string)
-
-	tok, err := config.Exchange(c, c.Query("code"), oauth2.VerifierOption(codeVerifier))
-	if err != nil {
-		log.Println("Token exchange failed with error", err)
-		c.AbortWithStatus(500)
-		return
-	}
-
-	idToken, ok := tok.Extra("id_token").(string)
-
-	session.Set("jhid_auth", true)
-	session.Save()
-}
-
-func EnsureLogin(redirectFail bool) func(c *gin.Context) {
-	return (func(c *gin.Context) {
-		session := sessions.Default(c)
-		if session.Get("jhid_auth") == true {
-			c.Next()
-		} else {
-			if redirectFail {
-				c.Redirect(307, "/auth/v2/login")
-				c.Abort()
-				return
-			} else {
-				c.AbortWithStatus(401)
-				return
-			}
-		}
-	})
 }
