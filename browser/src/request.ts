@@ -11,12 +11,26 @@ export class AuthError extends Error {}
 export class UnownedError extends Error {}
 
 
+/**
+ * Perform an HTTP GET request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The reponse
+ */
 const get = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     return await wrapper( url, {
         'credentials': 'include'
     }, authErrorResolution );
 };
 
+/**
+ * Perform an HTTP POST request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param payload - The request body to send as a string
+ * @param mime - The MIME type of the payload
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The response
+ */
 const post = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     return await wrapper( url, {
         'credentials': 'include',
@@ -28,6 +42,19 @@ const post = async ( url: string, payload: string, mime: string = 'application/j
     }, authErrorResolution );
 };
 
+/**
+ * Perform an HTTP DELETE request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The response
+ */
+const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+    return await wrapper( url, {
+        'credentials': 'include',
+        'method': 'delete'
+    }, authErrorResolution );
+};
+
 const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     const res = await fetch( config.get().backendURL + url, {
         'redirect': 'manual',
@@ -35,23 +62,33 @@ const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: Au
     } );
 
     if ( res.type === 'opaqueredirect' ) {
-        if ( config.get().authErrorEvent ) {
-            document.dispatchEvent( new CustomEvent( 'autherror' ) );
-        }
-
-        if ( ( authErrorResolution && authErrorResolution === 'resolve' ) || ( !authErrorResolution && config.get().defaultAuthErrorResolution === 'resolve' ) ) {
-            login();
-        } else {
-            throw new AuthError( 'ERR_USER_UNAUTHORIZED' );
-        }
+        handleUnauth( authErrorResolution );
 
         return res;
     } else {
-        return res;
+        if ( res.ok )
+            return res;
+        else if ( res.status === 401 || res.status === 403 )
+            throw new AuthError( 'ERR_USER_UNAUTHORIZED' );
+        else
+            throw new Error( 'ERR_' + res.status );
+    }
+};
+
+const handleUnauth = ( authErrorResolution: AuthErrorResolution ) => {
+    if ( config.get().authErrorEvent ) {
+        document.dispatchEvent( new CustomEvent( 'autherror' ) );
+    }
+
+    if ( ( authErrorResolution && authErrorResolution === 'resolve' ) || ( !authErrorResolution && config.get().defaultAuthErrorResolution === 'resolve' ) ) {
+        login();
+    } else {
+        throw new AuthError( 'ERR_USER_UNAUTHORIZED' );
     }
 };
 
 export default {
     get,
-    post
+    post,
+    'delete': deleteRequest
 };
