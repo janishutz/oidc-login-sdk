@@ -1,6 +1,14 @@
-import {
-    Config
-} from './dtype.js';
+export type AuthErrorResolution = 'resolve' | 'error';
+
+export interface Config {
+    'backendURL': URL;
+    'defaultAuthErrorResolution': AuthErrorResolution;
+    'authErrorEvent'?: string;
+    'authCheckEndpoint'?: string;
+    'loginEndpoint'?: string;
+    'logoutEndpoint'?: string;
+    'checkAutoRedirect'?: boolean;
+}
 
 let configuration: Config = {
     'backendURL': new URL( '' ),
@@ -11,7 +19,7 @@ const get = () => {
     return configuration;
 };
 
-const configure = ( config: Config ) => {
+export const configure = ( config: Config ) => {
     configuration = config;
 };
 
