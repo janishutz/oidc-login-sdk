@@ -11,7 +11,7 @@ export interface Config {
 }
 
 let configuration: Config = {
-    'backendURL': new URL( '' ),
+    'backendURL': new URL( 'http://localhost:8080' ),
     'defaultAuthErrorResolution': 'error'
 };
 
