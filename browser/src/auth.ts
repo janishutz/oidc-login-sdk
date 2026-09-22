@@ -1,5 +1,6 @@
 import request, {
-    AuthError
+    AuthError,
+    getBackendURL
 } from './request.js';
 import config from './config.js';
 
@@ -9,7 +10,11 @@ import config from './config.js';
  */
 export const login = ( returnTo?: URL ) => {
     sessionStorage.setItem( 'redirect', location.pathname );
-    location.href = ( config.get().loginEndpoint ?? '/auth/v2/login' ) + ( returnTo ? returnTo.toString() : '' );
+    const url = getBackendURL();
+
+    url.pathname = config.get().loginEndpoint ?? '/auth/v2/login';
+    url.search = returnTo ? returnTo.toString() : '';
+    location.href = url.toString();
 };
 
 /**
@@ -54,5 +59,8 @@ export const getRedirect = (): string | null => {
 
 /** Logs the user out */
 export const logout = async () => {
-    location.href = config.get().logoutEndpoint ?? '/auth/v2/logout';
+    const url = getBackendURL();
+
+    url.pathname = config.get().logoutEndpoint ?? '/auth/v2/logout';
+    location.href = url.toString();
 };
