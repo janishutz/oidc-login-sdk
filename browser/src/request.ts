@@ -1,7 +1,6 @@
-import {
+import config, {
     AuthErrorResolution
-} from './dtype.js';
-import config from './config.js';
+} from './config.js';
 import {
     login
 } from './auth.js';
@@ -55,6 +54,14 @@ const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolu
     }, authErrorResolution );
 };
 
+/**
+ * Retrieve the configured backend URL
+ * @returns The URL to the backend
+ */
+const getBackendURL = () => {
+    return config.get().backendURL;
+};
+
 const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     const res = await fetch( config.get().backendURL + url, {
         'redirect': 'manual',
@@ -75,7 +82,7 @@ const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: Au
     }
 };
 
-const handleUnauth = ( authErrorResolution: AuthErrorResolution ) => {
+const handleUnauth = ( authErrorResolution?: AuthErrorResolution ) => {
     if ( config.get().authErrorEvent ) {
         document.dispatchEvent( new CustomEvent( 'autherror' ) );
     }
@@ -90,5 +97,6 @@ const handleUnauth = ( authErrorResolution: AuthErrorResolution ) => {
 export default {
     get,
     post,
-    'delete': deleteRequest
+    'delete': deleteRequest,
+    getBackendURL
 };
