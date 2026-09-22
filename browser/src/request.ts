@@ -59,11 +59,14 @@ export const deleteRequest = async ( url: string, authErrorResolution?: AuthErro
  * @returns The URL to the backend
  */
 export const getBackendURL = () => {
-    return config.get().backendURL;
+    return new URL( config.get().backendURL.toString() );
 };
 
-const wrapper = async ( url: string, opts: RequestInit, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
-    const res = await fetch( config.get().backendURL + url, {
+const wrapper = async ( path: string, opts: RequestInit, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+    const url = getBackendURL();
+
+    url.pathname = path;
+    const res = await fetch( url.toString(), {
         'redirect': 'manual',
         ...opts
     } );
