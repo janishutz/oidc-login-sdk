@@ -16,7 +16,7 @@ export class UnownedError extends Error {}
  * @param authErrorResolution - The mean of authentication error resolution
  * @returns The reponse
  */
-const get = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+export const get = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     return await wrapper( url, {
         'credentials': 'include'
     }, authErrorResolution );
@@ -30,7 +30,7 @@ const get = async ( url: string, authErrorResolution?: AuthErrorResolution ): Pr
  * @param authErrorResolution - The mean of authentication error resolution
  * @returns The response
  */
-const post = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+export const post = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     return await wrapper( url, {
         'credentials': 'include',
         'body': payload,
@@ -47,7 +47,7 @@ const post = async ( url: string, payload: string, mime: string = 'application/j
  * @param authErrorResolution - The mean of authentication error resolution
  * @returns The response
  */
-const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+export const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     return await wrapper( url, {
         'credentials': 'include',
         'method': 'delete'
@@ -58,7 +58,7 @@ const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolu
  * Retrieve the configured backend URL
  * @returns The URL to the backend
  */
-const getBackendURL = () => {
+export const getBackendURL = () => {
     return config.get().backendURL;
 };
 
