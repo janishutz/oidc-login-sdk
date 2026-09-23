@@ -17,9 +17,13 @@ export class UnownedError extends Error {}
  * @returns The reponse
  */
 export const get = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
-    return await wrapper( url, {
-        'credentials': 'include'
-    }, authErrorResolution );
+    try {
+        return await wrapper( url, {
+            'credentials': 'include'
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
 };
 
 /**
@@ -31,14 +35,18 @@ export const get = async ( url: string, authErrorResolution?: AuthErrorResolutio
  * @returns The response
  */
 export const post = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
-    return await wrapper( url, {
-        'credentials': 'include',
-        'body': payload,
-        'method': 'post',
-        'headers': {
-            'Content-Type': mime ?? 'application/json'
-        }
-    }, authErrorResolution );
+    try {
+        return await wrapper( url, {
+            'credentials': 'include',
+            'body': payload,
+            'method': 'post',
+            'headers': {
+                'Content-Type': mime ?? 'application/json'
+            }
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
 };
 
 /**
@@ -48,10 +56,14 @@ export const post = async ( url: string, payload: string, mime: string = 'applic
  * @returns The response
  */
 export const deleteRequest = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
-    return await wrapper( url, {
-        'credentials': 'include',
-        'method': 'delete'
-    }, authErrorResolution );
+    try {
+        return await wrapper( url, {
+            'credentials': 'include',
+            'method': 'delete'
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
 };
 
 /**

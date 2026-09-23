@@ -30,7 +30,7 @@ export const check = async (): Promise<boolean> => {
         if ( e instanceof AuthError ) {
             status = false;
         } else {
-            throw e;
+            throw await e;
         }
     }
 
