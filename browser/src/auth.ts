@@ -17,6 +17,14 @@ export const login = ( returnTo?: URL ) => {
     location.href = url.toString();
 };
 
+/** Log in a user in a new browser tab or window */
+export const loginInNewTab = () => {
+    const url = getBackendURL();
+
+    url.pathname = config.get().loginEndpoint ?? '/auth/v2/login';
+    window.open( url.toString() );
+};
+
 /**
  * Check if a user is authenticated. This can also be done implicitly using a call to a protected endpoint
  * @returns A promise resolving to a boolean indicating authentication status
