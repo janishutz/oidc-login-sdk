@@ -27,13 +27,14 @@ export const loginInNewTab = () => {
 
 /**
  * Check if a user is authenticated. This can also be done implicitly using a call to a protected endpoint
+ * @param query Query string, without the leading question mark. E.g. `test=true&force=false`
  * @returns A promise resolving to a boolean indicating authentication status
  */
-export const check = async (): Promise<boolean> => {
+export const check = async ( query?: string ): Promise<boolean> => {
     let status: boolean;
 
     try {
-        status = ( await request.get( config.get().authCheckEndpoint ?? '/auth/v2/check' ) ).ok;
+        status = ( await request.get( config.get().authCheckEndpoint ?? '/auth/v2/check' + ( query ? '?' + query : '' ) ) ).ok;
     } catch ( e ) {
         if ( e instanceof AuthError ) {
             status = false;
