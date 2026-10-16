@@ -50,6 +50,29 @@ export const post = async ( url: string, payload: string, mime: string = 'applic
 };
 
 /**
+ * Perform an HTTP PUT request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param payload - The request body to send as a string
+ * @param mime - The MIME type of the payload
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The response
+ */
+export const put = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+    try {
+        return await wrapper( url, {
+            'credentials': 'include',
+            'body': payload,
+            'method': 'put',
+            'headers': {
+                'Content-Type': mime ?? 'application/json'
+            }
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
+};
+
+/**
  * Perform an HTTP DELETE request
  * @param url - The URL (just the path relative to website root) to fetch
  * @param authErrorResolution - The mean of authentication error resolution
