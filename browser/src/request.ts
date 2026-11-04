@@ -27,6 +27,22 @@ export const get = async ( url: string, authErrorResolution?: AuthErrorResolutio
 };
 
 /**
+ * Perform an HTTP QUERY request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The reponse
+ */
+export const query = async ( url: string, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+    try {
+        return await wrapper( url, {
+            'credentials': 'include'
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
+};
+
+/**
  * Perform an HTTP POST request
  * @param url - The URL (just the path relative to website root) to fetch
  * @param payload - The request body to send as a string
@@ -63,6 +79,29 @@ export const put = async ( url: string, payload: string, mime: string = 'applica
             'credentials': 'include',
             'body': payload,
             'method': 'put',
+            'headers': {
+                'Content-Type': mime ?? 'application/json'
+            }
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
+};
+
+/**
+ * Perform an HTTP PATCH request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param payload - The request body to send as a string
+ * @param mime - The MIME type of the payload
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The response
+ */
+export const patch = async ( url: string, payload: string, mime: string = 'application/json', authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
+    try {
+        return await wrapper( url, {
+            'credentials': 'include',
+            'body': payload,
+            'method': 'patch',
             'headers': {
                 'Content-Type': mime ?? 'application/json'
             }
@@ -134,8 +173,10 @@ const handleUnauth = ( authErrorResolution?: AuthErrorResolution ) => {
 
 export default {
     get,
+    query,
     post,
     put,
+    patch,
     'delete': deleteRequest,
     getBackendURL
 };
