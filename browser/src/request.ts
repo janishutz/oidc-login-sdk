@@ -135,6 +135,7 @@ const handleUnauth = ( authErrorResolution?: AuthErrorResolution ) => {
 export default {
     get,
     post,
+    put,
     'delete': deleteRequest,
     getBackendURL
 };
