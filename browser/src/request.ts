@@ -9,7 +9,6 @@ export class AuthError extends Error {}
 
 export class UnownedError extends Error {}
 
-
 /**
  * Perform an HTTP GET request
  * @param url - The URL (just the path relative to website root) to fetch
@@ -127,6 +126,39 @@ export const deleteRequest = async ( url: string, authErrorResolution?: AuthErro
         throw await e;
     }
 };
+
+/**
+ * Send FormData via HTTP request
+ * @param url - The URL (just the path relative to website root) to fetch
+ * @param formdata - The FormData to send
+ * @param method - The HTTP method to use. Defaults to 'PUT'
+ * @param authErrorResolution - The mean of authentication error resolution
+ * @returns The reponse
+ */
+export const sendFormData = async (
+    url: string,
+    formdata: FormData,
+    method: string = 'PUT',
+    authErrorResolution?: AuthErrorResolution
+): Promise<Response> => {
+    if ( !method ) {
+        method = 'PUT';
+    }
+
+    try {
+        return await wrapper( url, {
+            'credentials': 'include',
+            'body': formdata,
+            'method': method,
+            'headers': {
+                'Content-Type': 'multipart/form-data'
+            }
+        }, authErrorResolution );
+    } catch ( e ) {
+        throw await e;
+    }
+};
+
 
 /**
  * Retrieve the configured backend URL
