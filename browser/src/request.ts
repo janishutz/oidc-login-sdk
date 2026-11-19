@@ -171,7 +171,13 @@ export const getBackendURL = () => {
 const wrapper = async ( path: string, opts: RequestInit, authErrorResolution?: AuthErrorResolution ): Promise<Response> => {
     const url = getBackendURL();
 
-    url.pathname = path;
+    if ( path.includes( '?' ) ) {
+        url.pathname = path.slice( 0, path.indexOf( '?' ) );
+        url.search = path.substring( path.indexOf( '?' ) );
+    } else {
+        url.pathname = path;
+    }
+
     const res = await fetch( url.toString(), {
         'redirect': 'manual',
         ...opts
