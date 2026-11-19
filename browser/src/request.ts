@@ -149,10 +149,7 @@ export const sendFormData = async (
         return await wrapper( url, {
             'credentials': 'include',
             'body': formdata,
-            'method': method,
-            'headers': {
-                'Content-Type': 'multipart/form-data'
-            }
+            'method': method
         }, authErrorResolution );
     } catch ( e ) {
         throw await e;
