@@ -54,7 +54,7 @@ export const post = async ( url: string, payload: string, mime: string = 'applic
         return await wrapper( url, {
             'credentials': 'include',
             'body': payload,
-            'method': 'post',
+            'method': 'POST',
             'headers': {
                 'Content-Type': mime ?? 'application/json'
             }
@@ -77,7 +77,7 @@ export const put = async ( url: string, payload: string, mime: string = 'applica
         return await wrapper( url, {
             'credentials': 'include',
             'body': payload,
-            'method': 'put',
+            'method': 'PUT',
             'headers': {
                 'Content-Type': mime ?? 'application/json'
             }
@@ -100,7 +100,7 @@ export const patch = async ( url: string, payload: string, mime: string = 'appli
         return await wrapper( url, {
             'credentials': 'include',
             'body': payload,
-            'method': 'patch',
+            'method': 'PATCH',
             'headers': {
                 'Content-Type': mime ?? 'application/json'
             }
@@ -120,7 +120,7 @@ export const deleteRequest = async ( url: string, authErrorResolution?: AuthErro
     try {
         return await wrapper( url, {
             'credentials': 'include',
-            'method': 'delete'
+            'method': 'DELETE'
         }, authErrorResolution );
     } catch ( e ) {
         throw await e;
@@ -138,7 +138,7 @@ export const deleteRequest = async ( url: string, authErrorResolution?: AuthErro
 export const sendFormData = async (
     url: string,
     formdata: FormData,
-    method: string = 'PUT',
+    method: 'PUT' | 'POST' | 'PATCH' = 'PUT',
     authErrorResolution?: AuthErrorResolution
 ): Promise<Response> => {
     if ( !method ) {
